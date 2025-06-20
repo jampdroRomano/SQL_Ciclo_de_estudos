@@ -8,6 +8,110 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 
 
+### SUBQUERY (SUBSELECT) - 19/06
+
+Monte um relatório onde todos os produtos cadastrados que têm o preço de venda acima da média
+
+Sem SUBQUERY:
+
+```sql
+SELECT AVG(ListPrice)
+FROM Production.Product
+
+SELECT *
+FROM Production.Product
+WHERE ListPrice > 438.66
+```
+
+Com SUBQUERY:
+
+```sql
+SELECT *
+FROM Production.Product
+WHERE ListPrice > (SELECT AVG(ListPrice) FROM Production.Product)
+```
+
+**Explicação:**
+
+* A consulta sem subquery calcula a média (`AVG(ListPrice)`) separadamente e depois faz outra consulta comparando com esse valor.
+* A subquery faz essa média diretamente na cláusula `WHERE`, tornando o código mais dinâmico e limpo.
+* `(SELECT AVG(ListPrice) FROM Production.Product)` é a subconsulta que retorna o valor médio do preço.
+
+---
+
+### SUBQUERY vs JOIN – Funcionários com cargo "Design Engineer"
+
+Aqui estamos fazendo uma **SUBQUERY** e depois comparando com uma **JOIN** que retorna o mesmo resultado. Ambas trazem os nomes dos funcionários que têm o cargo de **Design Engineer**.
+
+Consulta de exemplo com filtro por IDs (exemplo básico):
+
+```sql
+SELECT *
+FROM HumanResources.Employee 
+WHERE BusinessEntityID IN (5,6,15)
+```
+
+Consulta usando **SUBQUERY**:
+
+```sql
+SELECT FirstName 
+FROM Person.Person
+WHERE BusinessEntityID IN (
+    SELECT BusinessEntityID 
+    FROM HumanResources.Employee 
+    WHERE JobTitle = 'Design Engineer'
+)
+```
+
+Consulta equivalente usando **JOIN**:
+
+```sql
+SELECT A.BusinessEntityID, B.FirstName, B.LastName, A.JobTitle 
+FROM HumanResources.Employee A
+JOIN Person.Person B ON A.BusinessEntityID = B.BusinessEntityID
+WHERE A.JobTitle = 'Design Engineer'
+```
+
+**Explicação:**
+
+* A **SUBQUERY** faz a seleção dos `BusinessEntityID` de quem tem o cargo "Design Engineer" e usa esses IDs para buscar os nomes na tabela `Person.Person`.
+* Já o **JOIN** conecta diretamente a tabela de funcionários com a tabela de pessoas, retornando todos os dados desejados numa só consulta.
+* Ambas são válidas, mas o JOIN costuma ser mais performático em muitos cenários, além de mais direto quando você precisa de várias colunas relacionadas.
+
+---
+
+### SUBQUERY vs JOIN – Endereços no estado de "Alberta"
+
+Aqui temos um **desafio** onde buscamos todos os endereços localizados no estado de **Alberta**. Para isso, comparamos duas abordagens: uma usando **SUBQUERY** e outra usando **JOIN**.
+
+Consulta usando **SUBQUERY**:
+
+```sql
+SELECT *
+FROM Person.Address 
+WHERE StateProvinceID IN (
+	SELECT StateProvinceID
+	FROM Person.StateProvince
+	WHERE Name = 'Alberta'
+)
+```
+
+Consulta equivalente usando **JOIN**:
+
+```sql
+SELECT *
+FROM Person.Address A
+JOIN Person.StateProvince B ON A.StateProvinceID = B.StateProvinceID
+WHERE B.Name = 'Alberta'
+```
+
+**Explicação:**
+
+* A **SUBQUERY** busca o `StateProvinceID` correspondente ao nome "Alberta" e usa esse ID para filtrar os endereços.
+* A **JOIN** conecta diretamente as tabelas `Person.Address` e `Person.StateProvince`, filtrando os resultados pelo nome do estado.
+* Ambas as abordagens retornam os mesmos dados, mas a JOIN tende a ser mais clara quando precisamos de colunas de ambas as tabelas.
+
+---
 
 ### SELF JOIN
 

@@ -4,9 +4,125 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# Estudo de `DATEPART` no SQL Server
+
+O `DATEPART` é uma função do SQL Server usada para extrair partes específicas de uma data, como ano, mês, dia, semana, hora, minuto, etc. É muito útil para agrupar, filtrar ou analisar dados temporais.
+
+---
+
+## Exemplo 1 – Extraindo o mês da data com a `SalesOrderID`
+
+```sql
+SELECT SalesOrderID, DATEPART(month, OrderDate) AS Mes
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## Exemplo 2 – Média do valor total por ano
+
+```sql
+SELECT AVG(TotalDue) AS Media, DATEPART(year, OrderDate) AS Mes
+FROM Sales.SalesOrderHeader
+GROUP BY DATEPART(year, OrderDate)
+ORDER BY Mes
+```
+
+---
+
+## Exemplo 3 – Mês e ano separados
+
+```sql
+SELECT
+  SalesOrderID,
+  DATEPART(YEAR, OrderDate) AS Ano,
+  DATEPART(MONTH, OrderDate) AS Mes
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## Exemplo 4 – Semana do ano (1 a 53)
+
+```sql
+SELECT
+  SalesOrderID,
+  DATEPART(WEEK, OrderDate) AS Semana
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## Exemplo 5 – Trimestre
+
+```sql
+SELECT
+  SalesOrderID,
+  DATEPART(QUARTER, OrderDate) AS Trimestre
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## Exemplo 6 – Dia do mês
+
+```sql
+SELECT
+  SalesOrderID,
+  DATEPART(DAY, OrderDate) AS Dia
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## Exemplo 7 – Dia da semana (1 = domingo, 7 = sábado)
+
+```sql
+SELECT
+  SalesOrderID,
+  DATEPART(WEEKDAY, OrderDate) AS DiaDaSemana
+FROM Sales.SalesOrderHeader
+```
+
+Obs.: Você pode usar `SET DATEFIRST` para alterar qual dia começa a semana.
+
+---
+
+## Exemplo 8 – Hora, minuto e segundo
+
+```sql
+SELECT
+  SalesOrderID,
+  DATEPART(HOUR, OrderDate) AS Hora,
+  DATEPART(MINUTE, OrderDate) AS Minuto,
+  DATEPART(SECOND, OrderDate) AS Segundo
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## Exemplo 9 – Agrupando por trimestre e ano
+
+```sql
+SELECT
+  DATEPART(YEAR, OrderDate) AS Ano,
+  DATEPART(QUARTER, OrderDate) AS Trimestre,
+  COUNT(*) AS TotalPedidos
+FROM Sales.SalesOrderHeader
+GROUP BY DATEPART(YEAR, OrderDate), DATEPART(QUARTER, OrderDate)
+ORDER BY Ano, Trimestre
+```
+
+---
+
+**Dica extra:** para retornar nomes como "Janeiro", "Segunda-feira" etc., você pode usar:
+
+- `DATENAME(MONTH, OrderDate)` → retorna "Janeiro", "Fevereiro"...
+- `FORMAT(OrderDate, 'MMMM')` → mesmo efeito
+
+---
+
 ## Tópicos Abordados:
-
-
 
 ### SUBQUERY (SUBSELECT) - 19/06
 
@@ -33,9 +149,9 @@ WHERE ListPrice > (SELECT AVG(ListPrice) FROM Production.Product)
 
 **Explicação:**
 
-* A consulta sem subquery calcula a média (`AVG(ListPrice)`) separadamente e depois faz outra consulta comparando com esse valor.
-* A subquery faz essa média diretamente na cláusula `WHERE`, tornando o código mais dinâmico e limpo.
-* `(SELECT AVG(ListPrice) FROM Production.Product)` é a subconsulta que retorna o valor médio do preço.
+- A consulta sem subquery calcula a média (`AVG(ListPrice)`) separadamente e depois faz outra consulta comparando com esse valor.
+- A subquery faz essa média diretamente na cláusula `WHERE`, tornando o código mais dinâmico e limpo.
+- `(SELECT AVG(ListPrice) FROM Production.Product)` é a subconsulta que retorna o valor médio do preço.
 
 ---
 
@@ -47,18 +163,18 @@ Consulta de exemplo com filtro por IDs (exemplo básico):
 
 ```sql
 SELECT *
-FROM HumanResources.Employee 
+FROM HumanResources.Employee
 WHERE BusinessEntityID IN (5,6,15)
 ```
 
 Consulta usando **SUBQUERY**:
 
 ```sql
-SELECT FirstName 
+SELECT FirstName
 FROM Person.Person
 WHERE BusinessEntityID IN (
-    SELECT BusinessEntityID 
-    FROM HumanResources.Employee 
+    SELECT BusinessEntityID
+    FROM HumanResources.Employee
     WHERE JobTitle = 'Design Engineer'
 )
 ```
@@ -66,7 +182,7 @@ WHERE BusinessEntityID IN (
 Consulta equivalente usando **JOIN**:
 
 ```sql
-SELECT A.BusinessEntityID, B.FirstName, B.LastName, A.JobTitle 
+SELECT A.BusinessEntityID, B.FirstName, B.LastName, A.JobTitle
 FROM HumanResources.Employee A
 JOIN Person.Person B ON A.BusinessEntityID = B.BusinessEntityID
 WHERE A.JobTitle = 'Design Engineer'
@@ -74,9 +190,9 @@ WHERE A.JobTitle = 'Design Engineer'
 
 **Explicação:**
 
-* A **SUBQUERY** faz a seleção dos `BusinessEntityID` de quem tem o cargo "Design Engineer" e usa esses IDs para buscar os nomes na tabela `Person.Person`.
-* Já o **JOIN** conecta diretamente a tabela de funcionários com a tabela de pessoas, retornando todos os dados desejados numa só consulta.
-* Ambas são válidas, mas o JOIN costuma ser mais performático em muitos cenários, além de mais direto quando você precisa de várias colunas relacionadas.
+- A **SUBQUERY** faz a seleção dos `BusinessEntityID` de quem tem o cargo "Design Engineer" e usa esses IDs para buscar os nomes na tabela `Person.Person`.
+- Já o **JOIN** conecta diretamente a tabela de funcionários com a tabela de pessoas, retornando todos os dados desejados numa só consulta.
+- Ambas são válidas, mas o JOIN costuma ser mais performático em muitos cenários, além de mais direto quando você precisa de várias colunas relacionadas.
 
 ---
 
@@ -88,7 +204,7 @@ Consulta usando **SUBQUERY**:
 
 ```sql
 SELECT *
-FROM Person.Address 
+FROM Person.Address
 WHERE StateProvinceID IN (
 	SELECT StateProvinceID
 	FROM Person.StateProvince
@@ -107,9 +223,9 @@ WHERE B.Name = 'Alberta'
 
 **Explicação:**
 
-* A **SUBQUERY** busca o `StateProvinceID` correspondente ao nome "Alberta" e usa esse ID para filtrar os endereços.
-* A **JOIN** conecta diretamente as tabelas `Person.Address` e `Person.StateProvince`, filtrando os resultados pelo nome do estado.
-* Ambas as abordagens retornam os mesmos dados, mas a JOIN tende a ser mais clara quando precisamos de colunas de ambas as tabelas.
+- A **SUBQUERY** busca o `StateProvinceID` correspondente ao nome "Alberta" e usa esse ID para filtrar os endereços.
+- A **JOIN** conecta diretamente as tabelas `Person.Address` e `Person.StateProvince`, filtrando os resultados pelo nome do estado.
+- Ambas as abordagens retornam os mesmos dados, mas a JOIN tende a ser mais clara quando precisamos de colunas de ambas as tabelas.
 
 ---
 
@@ -161,14 +277,11 @@ O resultado é ordenado alfabeticamente pelos nomes dos clientes A e B.
 
 **Dica geral ao usar SELF JOINs:**
 
-*   Use aliases (A, B) para diferenciar as duas instâncias da tabela.
-*   Use condições como `A.ID < B.ID` para evitar repetições invertidas e comparações do registro com ele mesmo.
-*   O `DISTINCT` pode ajudar a limpar repetições idênticas.
+- Use aliases (A, B) para diferenciar as duas instâncias da tabela.
+- Use condições como `A.ID < B.ID` para evitar repetições invertidas e comparações do registro com ele mesmo.
+- O `DISTINCT` pode ajudar a limpar repetições idênticas.
 
 ---
-
-
-
 
 ## SQL 03/06
 
@@ -217,9 +330,9 @@ LEFT JOIN Sales.PersonCreditCard SPC ON PP.BusinessEntityID = SPC.BusinessEntity
 WHERE SPC.BusinessEntityID IS NULL
 ```
 
-*   `INNER JOIN`: 19118
-*   `LEFT JOIN`: 19972
-*   `SELECT 19972 - 19118`
+- `INNER JOIN`: 19118
+- `LEFT JOIN`: 19972
+- `SELECT 19972 - 19118`
 
 ---
 
@@ -230,6 +343,7 @@ Retorna apenas os resultados que correspondem (existem) tanto na Tabela A como n
 **Exemplo:**
 
 Tabela A:
+
 ```
 id  | nome
 --- | ---
@@ -240,6 +354,7 @@ id  | nome
 ```
 
 Tabela B:
+
 ```
 id  | nome
 --- | ---
@@ -256,6 +371,7 @@ INNER JOIN TabelaB ON TabelaA.nome = TabelaB.nome
 ```
 
 **Resultado:**
+
 ```
 id  | nome    | id  | nome
 --- | ------- | --- | ------
@@ -272,6 +388,7 @@ Retorna um conjunto de todos os registros correspondentes da Tabela A e Tabela B
 **Exemplo:**
 
 Tabela A:
+
 ```
 id  | nome
 --- | ---
@@ -282,6 +399,7 @@ id  | nome
 ```
 
 Tabela B:
+
 ```
 id  | nome
 --- | ---
@@ -298,6 +416,7 @@ FULL OUTER JOIN TabelaB ON TabelaA.nome = TabelaB.nome
 ```
 
 **Resultado:**
+
 ```
 id   | nome    | id   | nome
 ---- | ------- | ---- | ------
@@ -318,6 +437,7 @@ Retorna um conjunto de todos os registros da Tabela A, e, além disso, os regist
 **Exemplo:**
 
 Tabela A:
+
 ```
 id  | nome
 --- | ---
@@ -328,6 +448,7 @@ id  | nome
 ```
 
 Tabela B:
+
 ```
 id  | nome
 --- | ---
@@ -344,6 +465,7 @@ LEFT OUTER JOIN TabelaB ON TabelaA.nome = TabelaB.nome
 ```
 
 **Resultado:**
+
 ```
 id  | nome    | id   | nome
 --- | ------- | ---- | ------
@@ -361,9 +483,6 @@ O contrário do `LEFT OUTER JOIN`. Irá considerar os dados da Tabela B e se na 
 
 ---
 
-
-
-
 ## SQL 02/06
 
 ```sql
@@ -379,9 +498,6 @@ INNER JOIN Person.Address PA ON PA.StateProvinceID = PS.StateProvinceID
 ```
 
 ---
-
-
-
 
 ## SQL 23/05
 
@@ -425,9 +541,6 @@ INNER JOIN Person.Address pa ON pa.AddressID = bea.AddressID
 
 ---
 
-
-
-
 ## SQL 20/05
 
 ### INNER JOIN
@@ -440,13 +553,10 @@ INNER JOIN Person.EmailAddress pe ON pp.BusinessEntityID = pe.BusinessEntityID
 
 **Explicação:**
 
-*   Seleciona as colunas no `SELECT` e apelida cada uma (por exemplo, `pp` para `Person.Person` e `pe` para `Person.EmailAddress`) para identificar a qual tabela pertence cada coluna.
-*   Seleciona a tabela principal e usa o `INNER JOIN` para selecionar a outra tabela. Use um identificador em comum (por exemplo, `BusinessEntityID` existe em ambas as tabelas) usando o `ON` para juntá-las, lembrando de separar sempre por apelidos.
+- Seleciona as colunas no `SELECT` e apelida cada uma (por exemplo, `pp` para `Person.Person` e `pe` para `Person.EmailAddress`) para identificar a qual tabela pertence cada coluna.
+- Seleciona a tabela principal e usa o `INNER JOIN` para selecionar a outra tabela. Use um identificador em comum (por exemplo, `BusinessEntityID` existe em ambas as tabelas) usando o `ON` para juntá-las, lembrando de separar sempre por apelidos.
 
 ---
-
-
-
 
 ## SQL 19/05
 
@@ -454,15 +564,15 @@ INNER JOIN Person.EmailAddress pe ON pp.BusinessEntityID = pe.BusinessEntityID
 
 **TABELA CLIENTE**
 
-*   `CLIENTE ID` (chave primária)
-*   `NOME`
-*   `ENDERECOID` (chave estrangeira)
+- `CLIENTE ID` (chave primária)
+- `NOME`
+- `ENDERECOID` (chave estrangeira)
 
 **TABELA ENDERECO**
 
-*   `ENDERECOID` (chave primária)
-*   `RUA`
-*   `CIDADE`
+- `ENDERECOID` (chave primária)
+- `RUA`
+- `CIDADE`
 
 ```sql
 SELECT C.ClienteId, C.Nome, E.Rua, E.Cidade
@@ -471,9 +581,6 @@ INNER JOIN Endereco E ON E.EnderecoId = C.EnderecoId
 ```
 
 ---
-
-
-
 
 ## SQL 30/04
 
@@ -555,38 +662,35 @@ A grande diferença entre `HAVING` e `WHERE` é que o `HAVING` é aplicado depoi
 
 **Exemplos:**
 
-*   **Objetivo:** Queremos saber quais nomes no sistema têm uma ocorrência maior que 10 vezes.
+- **Objetivo:** Queremos saber quais nomes no sistema têm uma ocorrência maior que 10 vezes.
 
-    ```sql
-    SELECT FirstName, count(FirstName) as "Quantidade"
-    FROM person.person
-    GROUP BY FirstName
-    HAVING count(firstname) > 10
-    ```
+  ```sql
+  SELECT FirstName, count(FirstName) as "Quantidade"
+  FROM person.person
+  GROUP BY FirstName
+  HAVING count(firstname) > 10
+  ```
 
-*   **Objetivo:** Queremos saber quais produtos que no total de vendas estão entre 162k a 500k.
+- **Objetivo:** Queremos saber quais produtos que no total de vendas estão entre 162k a 500k.
 
-    ```sql
-    SELECT productid, sum(linetotal) as "TOTAL"
-    FROM Sales.SalesOrderDetail
-    GROUP BY ProductID
-    HAVING sum(linetotal) between 162000 and 500000
-    ```
+  ```sql
+  SELECT productid, sum(linetotal) as "TOTAL"
+  FROM Sales.SalesOrderDetail
+  GROUP BY ProductID
+  HAVING sum(linetotal) between 162000 and 500000
+  ```
 
-*   **Objetivo:** Você quer saber quais nomes no sistema têm uma ocorrência maior que 10 vezes, porém somente onde o título é 'Mr.'.
+- **Objetivo:** Você quer saber quais nomes no sistema têm uma ocorrência maior que 10 vezes, porém somente onde o título é 'Mr.'.
 
-    ```sql
-    SELECT FirstName, count(FirstName) as "QUANTIDADE"
-    FROM Person.Person
-    WHERE Title = 'Mr.'
-    GROUP BY FirstName
-    HAVING count(FirstName) > 10
-    ```
+  ```sql
+  SELECT FirstName, count(FirstName) as "QUANTIDADE"
+  FROM Person.Person
+  WHERE Title = 'Mr.'
+  GROUP BY FirstName
+  HAVING count(FirstName) > 10
+  ```
 
 ---
-
-
-
 
 ## SQL 28/04
 
@@ -618,10 +722,10 @@ FROM Sales.SalesOrderDetail
 
 ### GROUP BY
 
-*   O `GROUP BY` basicamente divide o resultado da sua pesquisa em grupos.
-*   Para cada grupo você pode aplicar uma função de agregação, por exemplo:
-    *   Calcular a soma de itens.
-    *   Contar o número de itens naquele grupo.
+- O `GROUP BY` basicamente divide o resultado da sua pesquisa em grupos.
+- Para cada grupo você pode aplicar uma função de agregação, por exemplo:
+  - Calcular a soma de itens.
+  - Contar o número de itens naquele grupo.
 
 ```sql
 SELECT coluna1, funcaoAgregacao(coluna2)
@@ -647,9 +751,6 @@ GROUP BY Color
 
 ---
 
-
-
-
 ## SQL 26/04
 
 ### DESAFIO 2
@@ -657,6 +758,7 @@ GROUP BY Color
 **Objetivo:** Obter o nome e número do produto dos produtos que têm o `ProductID` entre 1 e 4.
 
 **R:**
+
 ```sql
 SELECT top 4 ProductID, Name, ProductNumber
 FROM Production.Product
@@ -702,7 +804,7 @@ FROM Person.Person
 WHERE FirstName like 'ovi%'
 ```
 
-*   `%`: não importa o conteúdo
+- `%`: não importa o conteúdo
 
 ```sql
 SELECT *
@@ -710,7 +812,7 @@ FROM Person.Person
 WHERE FirstName like '%ro%'
 ```
 
-*   `_`: limita apenas um caractere ou mais dependendo da quantidade de `_`
+- `_`: limita apenas um caractere ou mais dependendo da quantidade de `_`
 
 ```sql
 SELECT *
@@ -768,9 +870,6 @@ WHERE FirstName LIKE '%ro_'
 
 ---
 
-
-
-
 ## SQL 21/04
 
 ### Operadores Lógicos e de Comparação
@@ -791,9 +890,10 @@ OR                        OPERADOR LÓGICO OU
 
 **Objetivo:** A equipe de produção de produtos precisa do nome de todas as peças que pesam mais que 500kg mas não mais que 700kg para inspeção.
 
-*   `weight` = peso
+- `weight` = peso
 
 **R:**
+
 ```sql
 SELECT weight
 FROM Production.Product
@@ -805,6 +905,7 @@ WHERE Weight >= '500' and Weight <= '700'
 **Objetivo:** Foi pedido pelo marketing uma relação de todos os empregados (`employees`) que são casados (`single` = solteiro, `married` = casado) e são assalariados (`salaried`).
 
 **R:**
+
 ```sql
 SELECT *
 FROM HumanResources.Employee
@@ -816,6 +917,7 @@ WHERE MaritalStatus = 'M' and SalariedFlag = '1'
 **Objetivo:** Um usuário chamado Peter Krebs está devendo um pagamento. Consiga o e-mail dele para que possamos enviar uma cobrança!
 
 **R:**
+
 ```sql
 SELECT *
 FROM Person.Person
@@ -830,9 +932,6 @@ WHERE BusinessEntityID = '26'
 
 ---
 
-
-
-
 ### COUNT
 
 **Exemplo:**
@@ -842,43 +941,47 @@ SELECT COUNT (*)
 FROM Person.Person
 ```
 
-*   Retorna quantas linhas tem na Tabela `Person.Person`.
+- Retorna quantas linhas tem na Tabela `Person.Person`.
 
 ```sql
 SELECT COUNT (Title)
 FROM Person.Person
 ```
 
-*   Retorna todas as linhas da coluna `Title`.
+- Retorna todas as linhas da coluna `Title`.
 
 ```sql
 SELECT count (DISTINCT Title)
 FROM Person.Person
 ```
 
-*   Retorna o número de linhas que a informação não se repete na coluna `Title`.
+- Retorna o número de linhas que a informação não se repete na coluna `Title`.
 
 ### DESAFIO 1
 
 **Objetivo:** Saber quantos produtos temos cadastrados em nossa tabela de produtos.
 
 **R:**
+
 ```sql
 SELECT count (*)
 FROM Production.Product
 ```
-*   Resultado: 504
+
+- Resultado: 504
 
 ### DESAFIO 2
 
 **Objetivo:** Saber quantos tamanhos de produtos temos cadastrado em nossa tabela.
 
 **R:**
+
 ```sql
 SELECT count (Size)
 FROM Production.Product
 ```
-*   Resultado: 211
+
+- Resultado: 211
 
 ---
 
@@ -889,7 +992,7 @@ SELECT Top (10) *
 FROM Production.Product
 ```
 
-*   Retorna uma quantidade de linhas limitadas conforme informado no `()`.
+- Retorna uma quantidade de linhas limitadas conforme informado no `()`.
 
 ### ORDER BY
 
@@ -899,9 +1002,6 @@ FROM Person.Person
 ORDER BY FirstName asc
 ```
 
-*   Ordena os dados de uma coluna em ordem crescente (`asc`) ou decrescente (`desc`).
+- Ordena os dados de uma coluna em ordem crescente (`asc`) ou decrescente (`desc`).
 
 ---
-
-
-

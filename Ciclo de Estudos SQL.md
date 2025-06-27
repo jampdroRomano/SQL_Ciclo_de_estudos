@@ -4,6 +4,95 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# OPERAÇÕES EM STRING
+
+O `CONCAT()` Junta dois ou mais campos em uma única string. É comum usar para montar nomes completos, endereços, etc.
+
+```sql
+SELECT PP.BusinessEntityID, CONCAT(FirstName,' ', LastName), PPH.PhoneNumber, PE.EmailAddress
+FROM Person.Person PP
+JOIN Person.PersonPhone PPH ON PP.BusinessEntityID = PPH.BusinessEntityID
+JOIN Person.EmailAddress PE ON PP.BusinessEntityID = PE.BusinessEntityID
+where FirstName like 'Pi%' and LastName like 'a%'
+```
+
+---
+
+## `LEN()` – Tamanho da string (número de caracteres)
+
+A função `LEN()` retorna a quantidade de caracteres de uma string (sem contar espaços à direita).
+
+```sql
+SELECT
+  FirstName,
+  LEN(FirstName) AS Tamanho
+FROM Person.Person
+```
+
+---
+
+## `LOWER()` e `UPPER()` – Tudo minúsculo ou tudo maiúsculo
+
+As funções `LOWER()` e `UPPER()` são usadas para padronizar textos e evitar diferenciação de letras maiúsculas e minúsculas.
+
+```sql
+SELECT
+  FirstName,
+  LOWER(FirstName) AS Minusculo,
+  UPPER(FirstName) AS Maiusculo
+FROM Person.Person
+```
+
+---
+
+## `SUBSTRING()` – Pega parte de uma string
+
+A função `SUBSTRING()` permite extrair parte de uma string, informando a posição inicial e quantos caracteres você quer pegar.
+
+```sql
+SELECT
+  FirstName,
+  SUBSTRING(FirstName, 1, 3) AS InicioDoNome
+FROM Person.Person
+```
+
+> Neste exemplo, pega os 3 primeiros caracteres do nome.
+
+---
+
+## `REPLACE()` – Substitui partes da string
+
+A função `REPLACE()` substitui um pedaço da string por outro valor informado.
+
+```sql
+SELECT
+  FirstName,
+  REPLACE(FirstName, 'a', '*') AS NomeAlterado
+FROM Person.Person
+```
+
+> Troca todas as letras "a" por "\*".
+
+---
+
+## Exemplo combinado – várias funções juntas
+
+```sql
+SELECT
+  CONCAT(UPPER(FirstName), ' ', LOWER(LastName)) AS NomeFormatado,
+  LEN(FirstName) AS Tamanho,
+  SUBSTRING(FirstName, 1, 2) AS Iniciais,
+  REPLACE(LastName, 'a', '@') AS SobrenomeEditado
+FROM Person.Person
+WHERE LEN(FirstName) > 3
+```
+
+---
+
+Essas funções são muito úteis para **formatar dados, realizar buscas mais flexíveis, gerar relatórios e transformar textos de forma dinâmica.**
+
+---
+
 # Estudo de `DATEPART` no SQL Server
 
 O `DATEPART` é uma função do SQL Server usada para extrair partes específicas de uma data, como ano, mês, dia, semana, hora, minuto, etc. É muito útil para agrupar, filtrar ou analisar dados temporais.

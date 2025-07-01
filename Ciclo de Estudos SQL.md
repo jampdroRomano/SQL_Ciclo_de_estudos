@@ -4,6 +4,119 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# TIPOS DE DADOS NO SQL SERVER
+
+O SQL Server oferece diferentes tipos de dados para representar corretamente informações como texto, números, datas e valores lógicos. A escolha correta do tipo de dado garante economia de espaço, performance e integridade.
+
+---
+
+## 1. Boleanos
+
+O tipo `BIT` é usado para representar valores lógicos:
+
+- Pode armazenar `0` (falso), `1` (verdadeiro) ou `NULL` (desconhecido).
+- Por padrão, se não especificado, será `NULL`.
+
+```sql
+CREATE TABLE Exemplo (
+  Ativo BIT
+)
+```
+
+---
+
+## 2. Caracteres (Strings)
+
+### Tamanho fixo
+
+- `CHAR(n)` – armazena **sempre o número fixo de caracteres** definidos, completando com espaços se necessário.
+
+```sql
+CHAR(10) -- sempre ocupa 10 caracteres, mesmo se usar 3
+```
+
+### Tamanho variável
+
+- `VARCHAR(n)` – armazena até `n` caracteres, **ocupando apenas o espaço utilizado**.
+- `NVARCHAR(n)` – igual ao `VARCHAR`, mas aceita **caracteres Unicode** (como emojis e acentos internacionais).
+
+```sql
+VARCHAR(50)  -- ocupa só o necessário até 50
+NVARCHAR(100) -- ideal para textos com acentos ou emojis
+```
+
+---
+
+## 3. Números
+
+### Valores Exatos
+
+1. `TINYINT` – Inteiro de 0 a 255
+2. `SMALLINT` – Inteiro de -32.768 a 32.767
+3. `INT` – Inteiro de -2 bilhões até +2 bilhões
+4. `BIGINT` – Para números inteiros gigantes
+5. `NUMERIC(p,s)` ou `DECIMAL(p,s)` – Números com **precisão (`p`)** e **escala (`s`)**, ou seja, permite frações.
+
+```sql
+NUMERIC(5,2) -- até 5 dígitos, sendo 2 após a vírgula → Ex: 999.99
+```
+
+---
+
+### Valores Aproximados
+
+1. `REAL` – Aproximado, menos preciso (~7 dígitos)
+2. `FLOAT` – Mais preciso que o `REAL`, até ~15 dígitos, mas ambos são usados para cálculos científicos ou onde não se exige precisão exata.
+
+---
+
+## 4. Temporais
+
+Tipos usados para representar **datas, horas ou ambos**:
+
+- `DATE` – Apenas a data (formato: `AAAA-MM-DD`)
+- `DATETIME` – Data e hora (`AAAA-MM-DD hh:mm:ss`)
+- `DATETIME2` – Igual ao `DATETIME`, mas com precisão de **milissegundos** (`AAAA-MM-DD hh:mm:ss.fffffff`)
+- `SMALLDATETIME` – Intervalo limitado entre `'1900-01
+
+Por padrão ele é inicializado como nulo, e pode receber tanto 1 ou 0 BIT
+
+## 2. Caracteres
+
+# Tamanho fixo: 
+`Char` Permite inserir até uma quantidade fixa de caracteres e sempre ocupa todo o espaço reservado 10/50
+
+# Tamanhos variáveis:
+
+`Varchar` ou `Nvarchar` Permite inserir até uma quantidade que for definida, porem só usa o espaço que for preenchido 10/50
+
+## 3. Numeros
+
+# Valores Exatos
+
+1. `TYNYINT` - não tem parte valor fracionados (ex: 1.43, 24.23) somente 1,123123,324234,313123 etc...
+2. `SMALLINT` - mesma coisa porem limite maior
+3. `INT` - mesma coisa porem limite maior
+4. `BIGINT` - mesma coisa porem limite maior
+5. `NUMERIC ou DECIMAL` - valores exatos, porem permite ter parte fraciondos, que tambem pode ser especificado a precisão e escala (escala é o numero de digitos na parte fracional) -ex: Numeric (5,2) 113,44
+
+# Valores Aproximados
+
+1. `REAL` - Tem precisão aproximada de até 15 digitos
+2. `FLOAT` - Mesmo conceito de REAL
+
+## 4.Temporais
+
+`Date` - armazena data no formato aaaa/mm/dd
+`DATETIME` - armazena data e horas no formato aaaa/mm/dd:hh:mm:ss
+`DATETIME2` - data e horas com adição de milissegundos no formato aaaa/mm/dd:hh:mm:sssssss
+`SMALLDATETIME` - data e hora respeitando o limite entre '1900-01-01:00:00:00' até '2079-06-06:23:59:59'.
+`TIME` - horas, minutos, segundos e milissegundos respeitando o limite de '00:00:00.0000000' to '23:59:59.9999999'
+`DATETIMEOFFSET` - permite armazenar informações de data e horas incluindo o fuso horário
+
+
+
+
 # OPERAÇÕES MATEMÁTICAS NO SQL SERVER
 
 O SQL Server permite usar operadores e funções matemáticas direto nas consultas, o que é útil pra **calcular preços, lucros, totais, descontos e mais**, direto do banco de dados.

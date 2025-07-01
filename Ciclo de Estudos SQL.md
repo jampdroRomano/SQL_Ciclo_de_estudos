@@ -4,6 +4,169 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# OPERAÇÕES MATEMÁTICAS NO SQL SERVER
+
+O SQL Server permite usar operadores e funções matemáticas direto nas consultas, o que é útil pra **calcular preços, lucros, totais, descontos e mais**, direto do banco de dados.
+
+---
+
+## `+` Soma – Ex: valor total + frete
+
+```sql
+SELECT 
+  SalesOrderID,
+  SubTotal,
+  Freight,
+  SubTotal + Freight AS TotalComFrete
+FROM Sales.SalesOrderHeader
+```
+
+---
+
+## `-` Subtração – Ex: lucro (preço - custo)
+
+```sql
+SELECT 
+  ProductID,
+  ListPrice,
+  StandardCost,
+  ListPrice - StandardCost AS LucroBruto
+FROM Production.Product
+WHERE ListPrice > 0 AND StandardCost > 0
+```
+
+---
+
+## `*` Multiplicação – Ex: total por item (preço × quantidade)
+
+```sql
+SELECT 
+  SalesOrderID,
+  UnitPrice,
+  OrderQty,
+  UnitPrice * OrderQty AS TotalItem
+FROM Sales.SalesOrderDetail
+```
+
+---
+
+## `/` Divisão – Ex: valor médio por item
+
+```sql
+SELECT 
+  SalesOrderID,
+  SubTotal,
+  TotalDue,
+  SubTotal / TotalDue AS ProporcaoProdutos
+FROM Sales.SalesOrderHeader
+WHERE TotalDue > 0
+```
+
+> Dica: se quiser garantir decimal, usa `1.0`:
+> 
+> ```sql
+> SELECT 10 / 3.0 AS ResultadoDecimal
+> ```
+
+---
+
+## `%` Módulo – Ex: saber se um ID é par ou ímpar
+
+```sql
+SELECT 
+  BusinessEntityID,
+  CASE 
+    WHEN BusinessEntityID % 2 = 0 THEN 'Par'
+    ELSE 'Ímpar'
+  END AS TipoID
+FROM HumanResources.Employee
+```
+
+---
+
+## `POWER()` – Potência (ex: crescimento exponencial)
+
+```sql
+SELECT 
+  ProductID,
+  POWER(ListPrice, 2) AS PrecoAoQuadrado
+FROM Production.Product
+WHERE ListPrice > 0
+```
+
+---
+
+## `SQRT()` – Raiz quadrada (ex: cálculo técnico)
+
+```sql
+SELECT 
+  ProductID,
+  SQRT(ListPrice) AS RaizDoPreco
+FROM Production.Product
+WHERE ListPrice > 0
+```
+
+---
+
+## `ROUND()` – Arredondar valores
+
+```sql
+SELECT 
+  ProductID,
+  ListPrice * 1.13 AS ComImposto,
+  ROUND(ListPrice * 1.13, 2) AS ComImpostoArredondado
+FROM Production.Product
+WHERE ListPrice > 0
+```
+
+---
+
+## `CEILING()` – Arredonda pra cima (ex: embalagens)
+
+```sql
+SELECT 
+  ProductID,
+  Weight,
+  CEILING(Weight) AS PesoFinalEmbalado
+FROM Production.Product
+WHERE Weight IS NOT NULL
+```
+
+---
+
+## `FLOOR()` – Arredonda pra baixo (ex: lote inteiro)
+
+```sql
+SELECT 
+  ProductID,
+  Weight,
+  FLOOR(Weight) AS PesoCortado
+FROM Production.Product
+WHERE Weight IS NOT NULL
+```
+
+---
+
+## Exemplo completo – Cálculo de desconto, imposto e valor total
+
+```sql
+SELECT 
+  ProductID,
+  ListPrice,
+  ListPrice * 0.9 AS PrecoComDesconto,          -- 10% de desconto
+  ROUND(ListPrice * 1.12, 2) AS PrecoComImposto, -- 12% de imposto
+  ROUND((ListPrice * 0.9) * 1.12, 2) AS ValorFinal
+FROM Production.Product
+WHERE ListPrice > 0
+```
+
+---
+
+Esses cálculos te ajudam a **evitar exportar pra Excel** ou fazer regras fora do banco. Tudo pode ser feito direto na consulta SQL!
+
+---
+
+
 # OPERAÇÕES EM STRING
 
 O `CONCAT()` Junta dois ou mais campos em uma única string. É comum usar para montar nomes completos, endereços, etc.

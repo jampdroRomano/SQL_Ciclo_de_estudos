@@ -1,8 +1,93 @@
 # Ciclo de Estudos SQL
 
-Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. O conteúdo está organizado por datas, refletindo o progresso do aprendizado.
+Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. 
 
 ---
+# CHAVE PRIMÁRIA E CHAVE ESTRANGEIRA
+
+---
+
+## CHAVE PRIMÁRIA (`PRIMARY KEY`)
+
+A `PRIMARY KEY` é uma ou mais colunas que identificam de forma única cada registro de uma tabela.
+
+- Não pode ter valores repetidos.
+- Não pode ser `NULL`.
+- Cria automaticamente um índice único na coluna.
+
+---
+
+### Exemplo de criação de tabela com chave primária
+
+```sql
+CREATE TABLE Clientes (
+  ClienteID INT PRIMARY KEY,
+  Nome VARCHAR(100),
+  Email VARCHAR(100)
+)
+```
+
+`ClienteID` será único e obrigatório para cada cliente.
+
+---
+
+## CHAVE ESTRANGEIRA (`FOREIGN KEY`)
+
+A `FOREIGN KEY` é usada para criar relacionamentos entre tabelas.
+
+- Faz referência a uma `PRIMARY KEY` de outra tabela.
+- Garante a integridade referencial.
+- Impede que valores inválidos sejam inseridos.
+- Permite relacionar registros com segurança entre tabelas.
+
+---
+
+### Exemplo prático com relacionamento
+
+```sql
+CREATE TABLE Categorias (
+  CategoriaID INT PRIMARY KEY,
+  NomeCategoria VARCHAR(100)
+)
+
+CREATE TABLE Produtos (
+  ProdutoID INT PRIMARY KEY,
+  NomeProduto VARCHAR(100),
+  CategoriaID INT,
+  FOREIGN KEY (CategoriaID) REFERENCES Categorias(CategoriaID)
+)
+```
+
+Aqui, `CategoriaID` em `Produtos` depende da existência de um `CategoriaID` em `Categorias`.
+
+---
+
+### Diagrama de exemplo (visual)
+
+```
++-----------------+            +----------------+
+|     Produtos    |            |   Categorias   |
+|-----------------|            |----------------|
+| ProdutoID (PK)  |            |   GrupoID(PK)  |        
+| NomeProduto     |            | CategoriaID(FK)|
+| CategoriaID (FK)|----------->|  NomeCategoria |
++-----------------+            +----------------+
+```
+
+---
+
+## Dicas rápidas
+
+- Uma tabela só pode ter uma chave primária, mas pode ter várias chaves estrangeiras.
+- Sempre verifique se o tipo de dado das colunas que se relacionam é o mesmo.
+- Ao usar `FOREIGN KEY`, é possível também definir ações em caso de deleção ou atualização, como `ON DELETE CASCADE`.
+
+---
+
+Esse tipo de estrutura ajuda a organizar seu banco com integridade e relações bem definidas.
+
+---
+
 
 # TIPOS DE DADOS NO SQL SERVER
 

@@ -3,6 +3,94 @@
 Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. 
 
 ---
+# CRIAÇÃO DE TABELAS
+
+No SQL Server, criamos tabelas usando a instrução `CREATE TABLE`, definindo o nome da tabela, colunas, tipos de dados e possíveis restrições.
+
+---
+
+## Sintaxe base
+
+```sql
+CREATE TABLE nomeTabela (
+  coluna1 tipo restricao,
+  coluna2 tipo,
+  coluna3 tipo,
+  ...
+);
+```
+
+---
+
+## Principais restrições (`constraints`)
+
+- `NOT NULL` – Não permite valores nulos.
+- `UNIQUE` – Todos os valores da coluna devem ser únicos.
+- `PRIMARY KEY` – Combina `NOT NULL` com `UNIQUE`. Define uma chave primária.
+- `FOREIGN KEY` – Cria uma relação com uma chave primária de outra tabela.
+- `CHECK` – Garante que os valores da coluna atendam a uma condição.
+- `DEFAULT` – Define um valor padrão para a coluna, se nenhum valor for fornecido.
+
+---
+
+## Exemplo prático: modelo "YouTube Lite"
+
+### Tabela: `Canal`
+
+```sql
+CREATE TABLE Canal (
+  CanalId INT PRIMARY KEY,
+  Nome VARCHAR(150) NOT NULL,
+  ContagemInscritos INT DEFAULT 0,
+  DataCriacao DATETIME NOT NULL
+);
+```
+
+---
+
+### Tabela: `Video`
+
+```sql
+CREATE TABLE Video (
+  VideoId INT PRIMARY KEY,
+  Nome VARCHAR(150) NOT NULL,
+  Visualizacoes INT DEFAULT 0,
+  Likes INT DEFAULT 0,
+  Dislikes INT DEFAULT 0,
+  Duracao INT NOT NULL,
+  CanalId INT,
+  FOREIGN KEY (CanalId) REFERENCES Canal(CanalId)
+);
+```
+
+---
+
+## Representação do relacionamento
+
+```
++------------+                +--------------+
+|   Canal    |                |    Video     |
+|------------|                |--------------|
+| CanalId PK |<-----------+   | VideoId PK   |
+| Nome       |            |   | Nome         |
+| Inscritos  |            +---| CanalId FK   |
+| DataCriacao|                | ...          |
++------------+                +--------------+
+```
+
+---
+
+Esse exemplo mostra como estruturar tabelas com **relacionamento 1:N**, onde **um canal pode ter vários vídeos**, e também como aplicar restrições que garantem a integridade e consistência dos dados.
+
+---
+
+
+
+
+
+
+
+
 # CHAVE PRIMÁRIA E CHAVE ESTRANGEIRA
 
 ---

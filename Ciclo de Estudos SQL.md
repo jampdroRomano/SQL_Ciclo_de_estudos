@@ -3,6 +3,64 @@
 Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. 
 
 ---
+# INSERT INTO
+
+No SQL Server, para inserir dados em uma tabela usamos o comando `INSERT INTO`, informando os valores das colunas conforme a estrutura da tabela.
+
+---
+
+## SINTAXE
+
+```sql
+INSERT INTO nomeTabela (coluna1, coluna2, ...)
+VALUES (valor1, valor2, ...);
+```
+
+---
+
+## EXEMPLO PRÁTICO
+
+Suponha que temos um banco chamado `Youtube`, com duas tabelas: `Canal` e `Video`.
+
+```sql
+-- Inserindo um canal
+INSERT INTO Canal (CanalID, Nome, DataCriacao)
+VALUES (1, 'PrimeiroCanal', GETDATE());
+
+-- Inserindo um vídeo relacionado ao canal
+INSERT INTO Video (VideoId, Nome, Duracao, Likes, Dislikes, CanalId)
+VALUES (1, 'Como fritar ovo sem óleo', 120, 50, 3, 1);
+```
+
+---
+
+## Observação
+
+No exemplo acima, respeitamos a **restrição de chave estrangeira** entre as tabelas `Video` e `Canal`.  
+A coluna `CanalId` da tabela `Video` é uma chave estrangeira que faz referência à chave primária da tabela `Canal`.
+
+Isso significa que **só é possível inserir um vídeo se o `CanalId` informado já existir na tabela `Canal`**.  
+Se você tentar inserir um vídeo com um `CanalId` inexistente, o SQL Server bloqueará a operação por violação de integridade referencial.
+
+---
+
+## Inserir dados de uma tabela em outra
+
+Também é possível inserir dados em uma tabela a partir de outra tabela usando `SELECT INTO`.
+
+```sql
+SELECT * INTO Shorts FROM Video;
+```
+
+Este comando cria a tabela `Shorts` com a mesma estrutura e dados da tabela `Video`.
+
+---
+
+Esse tipo de comando é fundamental para alimentar o banco de dados com informações consistentes e também respeitar os relacionamentos definidos na modelagem.
+
+---
+
+
 # CRIAÇÃO DE TABELAS
 
 No SQL Server, criamos tabelas usando a instrução `CREATE TABLE`, definindo o nome da tabela, colunas, tipos de dados e possíveis restrições.
@@ -33,7 +91,7 @@ CREATE TABLE nomeTabela (
 
 ---
 
-## Exemplo prático: modelo "YouTube Lite"
+## Exemplo prático: modelo "YouTube"
 
 ### Tabela: `Canal`
 
@@ -83,13 +141,6 @@ CREATE TABLE Video (
 Esse exemplo mostra como estruturar tabelas com **relacionamento 1:N**, onde **um canal pode ter vários vídeos**, e também como aplicar restrições que garantem a integridade e consistência dos dados.
 
 ---
-
-
-
-
-
-
-
 
 # CHAVE PRIMÁRIA E CHAVE ESTRANGEIRA
 

@@ -3,6 +3,52 @@
 Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. 
 
 ---
+# UPDATE
+
+O comando `UPDATE` é usado para **atualizar dados existentes** em uma ou mais colunas de uma tabela.  
+Para isso, você especifica a tabela, define os novos valores e indica **qual linha** deve ser alterada usando a cláusula `WHERE`.
+
+> Atenção: sempre utilize `WHERE` ao fazer `UPDATE`, para evitar alterar todos os registros da tabela por engano.
+
+---
+
+## SINTAXE
+
+```sql
+UPDATE nomeTabela
+SET coluna1 = valor1,
+    coluna2 = valor2
+WHERE condicao;
+```
+
+---
+
+## EXEMPLO NA PRÁTICA
+
+Vamos inserir dados na tabela `Canal` e `Video` e, em seguida, aplicar um `UPDATE` para simular que um vídeo recebeu um like e uma visualização.
+
+```sql
+-- Inserindo um canal
+INSERT INTO Canal (CanalID, Nome, DataCriacao)
+VALUES (2, 'SQL NA PRATICA', GETDATE());
+
+-- Inserindo um vídeo relacionado ao canal
+INSERT INTO Video (VideoID, Nome, CanalID, Duracao)
+VALUES (2, 'Aprendendo UPDATE', 2, 15);
+
+-- Adicionando 1 like e 1 visualização ao vídeo de ID 2
+UPDATE Video 
+SET Likes = 1, Visualizacoes = 1
+WHERE VideoID = 2;
+```
+
+---
+
+Esse exemplo mostra como o `UPDATE` modifica apenas os campos e registros desejados, mantendo os demais dados intactos.
+
+---
+
+
 # INSERT INTO
 
 No SQL Server, para inserir dados em uma tabela usamos o comando `INSERT INTO`, informando os valores das colunas conforme a estrutura da tabela.

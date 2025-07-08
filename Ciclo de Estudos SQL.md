@@ -3,6 +3,57 @@
 Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. 
 
 ---
+
+# ALTER TABLE
+
+O comando `ALTER TABLE` é usado para **modificar a estrutura de uma tabela existente**.  
+
+Com ele é possível:
+
+- Adicionar, remover ou alterar colunas
+- Definir valores padrão para uma coluna
+- Adicionar ou remover restrições (constraints)
+- Renomear colunas ou tabelas
+
+---
+
+## SINTAXE
+
+```sql
+-- Estrutura base
+ALTER TABLE nomeDaTabela
+ACAO;
+
+-- Para renomear uma coluna
+EXEC sp_RENAME 'nomeTabela.nomeColunaAtual', 'nomeColunaNova', 'COLUMN';
+
+-- Para renomear uma tabela
+EXEC sp_RENAME 'nomeTabelaAtual', 'nomeTabelaNova';
+```
+
+---
+
+## EXEMPLO NA PRÁTICA
+
+```sql
+-- Tornando a coluna 'Nome' obrigatória e aumentando o tamanho
+ALTER TABLE Aula 
+ALTER COLUMN Nome VARCHAR(300) NOT NULL;
+
+-- Adicionando uma nova coluna chamada 'Data'
+ALTER TABLE Aula 
+ADD Data DATETIME;
+
+-- Renomeando a coluna 'Nome' para 'NomeDaAula'
+EXEC sp_RENAME 'Aula.Nome', 'NomeDaAula', 'COLUMN';
+```
+
+---
+
+Esses comandos são úteis quando precisamos evoluir ou corrigir a estrutura do banco de dados sem perder os dados já existentes.
+
+---
+
 # DELETE
 
 O comando `DELETE` é utilizado para **remover registros de uma tabela** no banco de dados.

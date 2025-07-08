@@ -4,6 +4,22 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# VIEWS
+
+O comando `VIEW`é usado para **criar tabelas para consulta** onde você usa outras tabelas como base para criar uma nova tabela de pesquisa com apenas dados específicos que você precisa 
+
+## SINTAXE  
+
+```sql
+CREATE VIEW [Pessoas Simplicado] AS
+SELECT FirstName, MiddleName, LastName
+FROM Person.Person
+WHERE Title = 'Ms.'
+
+``` 
+
+---
+
 # CHECK CONSTRAINT
 
 

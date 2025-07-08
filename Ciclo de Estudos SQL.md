@@ -3,6 +3,42 @@
 Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e exemplos práticos. 
 
 ---
+# DELETE
+
+O comando `DELETE` é utilizado para **remover registros de uma tabela** no banco de dados.
+
+- A exclusão é feita linha por linha, conforme a condição definida.
+- Se não houver a cláusula `WHERE`, **todos os registros da tabela serão apagados**, o que pode causar perda total de dados.
+
+> Sempre utilize o `WHERE` com cuidado ao deletar dados, garantindo que somente as linhas corretas sejam afetadas.
+
+---
+
+## SINTAXE
+
+```sql
+DELETE FROM nomeTabela
+WHERE condicao;
+```
+
+---
+
+## EXEMPLO NA PRÁTICA
+
+Vamos excluir uma linha da tabela `AULA` onde o nome seja igual a `'Teste'`.
+
+```sql
+DELETE 
+FROM AULA
+WHERE nome = 'Teste';
+```
+
+---
+
+Esse comando remove apenas o registro onde a coluna `nome` for exatamente igual a `'Teste'`.
+
+---
+
 # UPDATE
 
 O comando `UPDATE` é usado para **atualizar dados existentes** em uma ou mais colunas de uma tabela.  
@@ -40,6 +76,19 @@ VALUES (2, 'Aprendendo UPDATE', 2, 15);
 UPDATE Video 
 SET Likes = 1, Visualizacoes = 1
 WHERE VideoID = 2;
+
+
+-- Outro exemplo
+
+UPDATE AULA
+SET Nome = 'mudei'
+WHERE AulaID = 3 and Nome = 'Teste';
+
+-- Com Update tambem apaga um campo especifico de uma coluna 
+
+UPDATE Aula
+SET Nome = ''
+WHERE AulaID = 2;
 ```
 
 ---
@@ -59,7 +108,11 @@ No SQL Server, para inserir dados em uma tabela usamos o comando `INSERT INTO`, 
 
 ```sql
 INSERT INTO nomeTabela (coluna1, coluna2, ...)
-VALUES (valor1, valor2, ...);
+VALUES 
+       (valor1, valor2),
+       (valor3, valor4);
+
+
 ```
 
 ---

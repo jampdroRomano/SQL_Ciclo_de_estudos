@@ -4,6 +4,28 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# CHECK CONSTRAINT
+
+
+## SINTAXE 
+
+```sql
+CREATE TABLE nomeDaTabela(
+    nomeColuna int CHECK (nomeColuna >= 18)
+);
+```
+
+## Exemplo na pratico :
+
+```sql
+CREATE TABLE Usuarios (
+    Id int PRIMARY KEY,
+    Nome varchar(100),
+    Idade int CHECK (Idade >= 18)
+);
+```
+---
+
 # DROP TABLE
 
 O comando `DROP TABLE` é usado para **excluir permanentemente uma tabela** do banco de dados.

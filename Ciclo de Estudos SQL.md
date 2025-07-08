@@ -4,6 +4,36 @@ Este documento contém um ciclo de estudos de SQL, abordando diversos tópicos e
 
 ---
 
+# DROP TABLE
+
+O comando `DROP TABLE` é usado para **excluir permanentemente uma tabela** do banco de dados.
+
+- Todos os dados da tabela são perdidos.
+- A estrutura da tabela também é removida.
+- Essa ação **não pode ser desfeita**, então é importante ter certeza antes de executar.
+
+---
+
+## SINTAXE
+
+```sql
+DROP TABLE nomeDaTabela;
+```
+
+---
+
+## EXEMPLO NA PRÁTICA
+
+```sql
+DROP TABLE Aula;
+```
+
+---
+
+Esse comando exclui a tabela `Aula` por completo, incluindo todos os registros e sua definição.
+
+---
+
 # ALTER TABLE
 
 O comando `ALTER TABLE` é usado para **modificar a estrutura de uma tabela existente**.  

@@ -1090,8 +1090,6 @@ O resultado é ordenado alfabeticamente pelos nomes dos clientes A e B.
 
 ---
 
-## SQL 03/06
-
 ### UNION
 
 O operador `UNION` combina dois ou mais resultados de um `SELECT` em um resultado apenas.
@@ -1290,7 +1288,6 @@ O contrário do `LEFT OUTER JOIN`. Irá considerar os dados da Tabela B e se na 
 
 ---
 
-## SQL 02/06
 
 ```sql
 SELECT PP.BusinessEntityID, PN.Name, PN.PhoneNumberTypeId, PP.PhoneNumber
@@ -1306,7 +1303,6 @@ INNER JOIN Person.Address PA ON PA.StateProvinceID = PS.StateProvinceID
 
 ---
 
-## SQL 23/05
 
 ### Exemplo de JOIN para obter informações de subcategorias de produtos
 
@@ -1348,7 +1344,6 @@ INNER JOIN Person.Address pa ON pa.AddressID = bea.AddressID
 
 ---
 
-## SQL 20/05
 
 ### INNER JOIN
 
@@ -1364,8 +1359,6 @@ INNER JOIN Person.EmailAddress pe ON pp.BusinessEntityID = pe.BusinessEntityID
 - Seleciona a tabela principal e usa o `INNER JOIN` para selecionar a outra tabela. Use um identificador em comum (por exemplo, `BusinessEntityID` existe em ambas as tabelas) usando o `ON` para juntá-las, lembrando de separar sempre por apelidos.
 
 ---
-
-## SQL 19/05
 
 ### Exemplo de INNER JOIN com tabelas Cliente e Endereço
 
@@ -1388,8 +1381,6 @@ INNER JOIN Endereco E ON E.EnderecoId = C.EnderecoId
 ```
 
 ---
-
-## SQL 30/04
 
 ### Consultas com GROUP BY e HAVING
 
@@ -1499,8 +1490,6 @@ A grande diferença entre `HAVING` e `WHERE` é que o `HAVING` é aplicado depoi
 
 ---
 
-## SQL 28/04
-
 ### COMANDOS SUM, MIN, MAX, AVG
 
 #### AS
@@ -1557,8 +1546,6 @@ GROUP BY Color
 ```
 
 ---
-
-## SQL 26/04
 
 ### DESAFIO 2
 
@@ -1676,8 +1663,6 @@ WHERE FirstName LIKE '%ro_'
     ```
 
 ---
-
-## SQL 21/04
 
 ### Operadores Lógicos e de Comparação
 
